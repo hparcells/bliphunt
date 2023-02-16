@@ -1,0 +1,24 @@
+{
+  "discord.enabled": false,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "files.exclude": {
+    ".next/": true,
+    ".turbo/": true,
+    "dist/": true,
+    "node_modules/": true,
+    "out/": true,
+    ".eslintignore": true,
+    ".eslintrc.json": true,
+    ".gitignore": true,
+    ".prettierrc": true,
+    "cspell.json": true,
+    "next.config.js": true,
+    "next-env.d.ts": true,
+    "NEXT.md": true,
+    "package-lock.json": true,
+    "tsconfig.json": true,
+    "tsconfig.server.json": true,
+    "turbo.json": true
+  }
+}
