@@ -1,4 +1,4 @@
-import '../styles/globals.scss';
+import '../styles/global.scss';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
