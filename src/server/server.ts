@@ -7,7 +7,6 @@ import { connect } from '../database/database';
 import { ensureDefaultUser } from '../database/user';
 
 import userRouter from '../api/user';
-import { User } from '../shared/types/user';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const port = process.env.PORT || 8000;

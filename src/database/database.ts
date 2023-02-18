@@ -1,8 +1,7 @@
-import mongoose, { Connection, ConnectOptions } from 'mongoose';
+import mongoose, { ConnectOptions } from 'mongoose';
 import * as dotenv from 'dotenv';
 
 import { databaseLog } from '../util/log';
-import { ConnectionOptions } from 'tls';
 
 dotenv.config();
 
