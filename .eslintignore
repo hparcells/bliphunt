@@ -1,1 +1,4 @@
 next.config.js
+sentry.client.config.js
+sentry.edge.config.js
+sentry.server.config.js
