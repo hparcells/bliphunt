@@ -23,7 +23,6 @@
     "sentry.properties": true,
     "sentry.server.config.js": true,
     "tsconfig.json": true,
-    "tsconfig.server.json": true,
     "turbo.json": true
   }
 }
