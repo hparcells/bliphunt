@@ -1,4 +1,4 @@
-function Home() {
+function IndexPage() {
   return (
     <>
       <p>Initial app.</p>
@@ -6,4 +6,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default IndexPage;
