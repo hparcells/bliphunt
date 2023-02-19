@@ -1,4 +1,4 @@
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose, { Connection, ConnectOptions, Mongoose } from 'mongoose';
 import * as dotenv from 'dotenv';
 
 import { databaseLog } from '../util/log';
@@ -8,7 +8,10 @@ dotenv.config();
 // TODO: Type this.
 declare global {
   // eslint-disable-next-line no-var
-  var mongoose: any;
+  var mongoose: {
+    connection: Mongoose | null;
+    promise: Promise<Mongoose> | null;
+  };
 }
 
 const isDevelopment = process.env.NODE_ENV === 'development';
