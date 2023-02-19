@@ -1,4 +1,4 @@
-import mongoose, { Connection, ConnectOptions, Mongoose } from 'mongoose';
+import mongoose, { ConnectOptions, Mongoose } from 'mongoose';
 import * as dotenv from 'dotenv';
 
 import { databaseLog } from '../util/log';

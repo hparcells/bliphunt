@@ -3,6 +3,7 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.exclude": {
+    ".husky": true,
     ".next/": true,
     ".turbo/": true,
     "dist/": true,
@@ -14,6 +15,7 @@
     ".prettierrc": true,
     ".sentryclirc": true,
     "cspell.json": true,
+    "jest.config.ts": true,
     "LICENSE": true,
     "next.config.js": true,
     "next-env.d.ts": true,
