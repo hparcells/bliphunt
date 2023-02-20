@@ -5,7 +5,8 @@
   "scripts": {
     "prepare": "husky install",
     "dev": "cross-env NODE_ENV=development PORT=8000 ts-node --project tsconfig.server.json ./src/server/server.ts",
-    "test": "jest --maxWorkers=50%",
+    "lint": "next lint",
+    "test": "jest --maxWorkers=50% --coverage",
     "build:next": "next build",
     "build:server": "tsc --project tsconfig.server.json",
     "build": "npm test && turbo build:next && turbo build:server",

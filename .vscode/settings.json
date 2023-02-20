@@ -7,6 +7,7 @@
     ".husky": true,
     ".next/": true,
     ".turbo/": true,
+    "coverage/": true,
     "dist/": true,
     "node_modules/": true,
     "out/": true,

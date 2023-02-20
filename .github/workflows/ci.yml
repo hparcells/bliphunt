@@ -17,5 +17,7 @@ jobs:
           node-version: 16
       - name: Install Dependencies
         run: npm install
+      - name: Run Lint
+        run: npm run lint
       - name: Run Jest
         run: npm test

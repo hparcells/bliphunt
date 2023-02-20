@@ -19,6 +19,7 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
+  // Reset.
   const collections = mongoose.connection.collections;
 
   for (const key in collections) {
@@ -36,7 +37,7 @@ afterAll(async () => {
 
 describe('User Database Functions', () => {
   it('Default user is created.', async () => {
-    await ensureDefaultUser();
+    const created = await ensureDefaultUser();
     const user = await getUser('default123');
 
     // Check if everything is created.
@@ -47,6 +48,18 @@ describe('User Database Functions', () => {
     expect(typeof user?.password).toBe('string');
     expect(typeof user?.apiKey).toBe('string');
     expect(user?.createdAt).toBeInstanceOf(Date);
+
+    // Function should return true if the account is created.
+    expect(created).toBe(true);
+  });
+  it('Default user is not created if it exists.', async () => {
+    // Create the first user.
+    const createdFirst = await ensureDefaultUser();
+    expect(createdFirst).toBe(true);
+
+    // Try to create the user again.
+    const createdSecond = await ensureDefaultUser();
+    expect(createdSecond).toBe(false);
   });
   it('Gets a user from the database.', async () => {
     await ensureDefaultUser();
@@ -65,7 +78,13 @@ describe('User Database Functions', () => {
 
     expect(success).toBe(true);
   });
-  it('Failed login.', async () => {
+  it('Failed login with a user that doens\'t exist.', async () => {
+    await ensureDefaultUser();
+    const success = await tryLogin('default123456', 'default123456');
+
+    expect(success).toBe(false);
+  });
+  it('Failed login with a wrong password.', async () => {
     await ensureDefaultUser();
     const success = await tryLogin('default123', 'default123456');
 

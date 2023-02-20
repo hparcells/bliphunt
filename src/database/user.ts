@@ -17,8 +17,10 @@ export async function getUser(username: string): Promise<IUser | null> {
  * Creates the default user in the database if it doesn't exist.
  *
  * The default username and password are `default123`.
+ *
+ * @returns `true` if the user was created, `false` otherwise.
  */
-export async function ensureDefaultUser(): Promise<void> {
+export async function ensureDefaultUser(): Promise<boolean> {
   // If the user doesn't exist, create it.
   if (!(await getUser('default123'))) {
     const user = new User({
@@ -30,7 +32,9 @@ export async function ensureDefaultUser(): Promise<void> {
       createdAt: new Date()
     });
     await user.save();
+    return true;
   }
+  return false;
 }
 
 /**
@@ -44,7 +48,7 @@ export async function tryLogin(username: string, password: string): Promise<bool
   if (!user) {
     return false;
   }
-  return await bcrypt.compare(password, user?.password as string);
+  return await bcrypt.compare(password, user.password as string);
 }
 
 /**
