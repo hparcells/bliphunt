@@ -28,6 +28,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
+  // Stop everything.
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
   await mongod.stop();
@@ -38,6 +39,7 @@ describe('User Database Functions', () => {
     await ensureDefaultUser();
     const user = await getUser('default123');
 
+    // Check if everything is created.
     expect(user).not.toBeNull();
     expect(typeof user?.id).toBe('string');
     expect(user?.username).toBe('default123');

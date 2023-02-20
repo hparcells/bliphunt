@@ -15,8 +15,11 @@ export async function getUser(username: string): Promise<IUser | null> {
 
 /**
  * Creates the default user in the database if it doesn't exist.
+ *
+ * The default username and password are `default123`.
  */
 export async function ensureDefaultUser(): Promise<void> {
+  // If the user doesn't exist, create it.
   if (!(await getUser('default123'))) {
     const user = new User({
       id: uuidv4(),

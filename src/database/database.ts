@@ -5,7 +5,6 @@ import { databaseLog } from '../util/log';
 
 dotenv.config();
 
-// TODO: Type this.
 declare global {
   // eslint-disable-next-line no-var
   var mongoose: {
@@ -14,6 +13,7 @@ declare global {
   };
 }
 
+// Database setup.
 const isDevelopment = process.env.NODE_ENV === 'development';
 const databaseUrl = `mongodb://${process.env.DATABASE_USERNAME}:${encodeURIComponent(
   process.env.DATABASE_PASSWORD as string
@@ -24,6 +24,7 @@ const databaseUrl = `mongodb://${process.env.DATABASE_USERNAME}:${encodeURICompo
 // Dismiss deprecation warning.
 mongoose.set('strictQuery', false);
 
+// Cached connection.
 let cached = global.mongoose;
 if (!cached) {
   cached = global.mongoose = { connection: null, promise: null };
@@ -34,10 +35,12 @@ export async function connect() {
     throw new Error('No database password provided.');
   }
 
+  // Return the cached connection if it exists already.
   if (cached.connection) {
     return cached.connection;
   }
 
+  // Create a new promise if it doesn't exist.
   if (!cached.promise) {
     const connectionOptions: ConnectOptions = {
       dbName: process.env.DATABASE_NAME
@@ -46,6 +49,7 @@ export async function connect() {
   }
 
   try {
+    // Try to connect and cache it.
     cached.connection = await cached.promise;
 
     databaseLog('Cached connection.');
