@@ -3,6 +3,7 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.exclude": {
+    // ".github/": true,
     ".husky": true,
     ".next/": true,
     ".turbo/": true,

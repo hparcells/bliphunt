@@ -40,7 +40,7 @@ describe('User Database Functions', () => {
 
     expect(user).not.toBeNull();
     expect(typeof user?.id).toBe('string');
-    expect(user?.username).toBe('default123');
+    expect(user?.username).toBe(process.env.DEFAULT_ACCOUNT_USERNAME);
     expect(user?.email).toBe('default@example.com');
     expect(typeof user?.password).toBe('string');
     expect(typeof user?.apiKey).toBe('string');
