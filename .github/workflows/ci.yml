@@ -17,10 +17,5 @@ jobs:
           node-version: 16
       - name: Install Dependencies
         run: npm install
-      - name: Create .env File
-        run: |
-          touch .env
-          echo DEFAULT_ACCOUNT_USERNAME=${{ vars.DEFAULT_ACCOUNT_USERNAME }} >> .env
-          echo DEFAULT_ACCOUNT_PASSWORD=${{ vars.DEFAULT_ACCOUNT_PASSWORD }} >> .env
       - name: Run Jest
         run: npm test
