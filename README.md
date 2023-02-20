@@ -8,4 +8,6 @@
 - `DATABASE_PORT`
 - `DATABASE_NAME`
 - `DEFAULT_ACCOUNT_USERNAME`
+  - Should be `default123`.
 - `DEFAULT_ACCOUNT_PASSWORD`
+  - Should be `default123`.
