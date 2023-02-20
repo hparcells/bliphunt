@@ -17,12 +17,12 @@ export async function getUser(username: string): Promise<IUser | null> {
  * Creates the default user in the database if it doesn't exist.
  */
 export async function ensureDefaultUser(): Promise<void> {
-  if (!(await getUser(process.env.DEFAULT_ACCOUNT_USERNAME as string))) {
+  if (!(await getUser('default123'))) {
     const user = new User({
       id: uuidv4(),
-      username: process.env.DEFAULT_ACCOUNT_USERNAME,
+      username: 'default123',
       email: 'default@example.com',
-      password: await bcrypt.hash(process.env.DEFAULT_ACCOUNT_PASSWORD as string, 12),
+      password: await bcrypt.hash('default123', 12),
       apiKey: crypto.randomBytes(32).toString('hex'),
       createdAt: new Date()
     });
