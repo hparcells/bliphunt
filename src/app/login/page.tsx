@@ -1,10 +1,13 @@
 'use client';
 
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
 function LoginPage() {
+  const router = useRouter();
+
   const [cookie, setCookie] = useCookies(['authentication']);
 
   const [username, setUsername] = useState('');
@@ -22,11 +25,12 @@ function LoginPage() {
             authentication: cookie.authentication
           });
         } catch (error) {
-          // Do nothing.
+          setDisabled(false);
+          setIncorrect(true);
+          setCookie('authentication', '', { maxAge: 0 });
           return;
         }
-        // TODO: Redirect.
-        console.log('Logged in.');
+        router.push('/feed');
         setDisabled(false);
       }
     })();
@@ -54,9 +58,7 @@ function LoginPage() {
           return;
         }
         setCookie('authentication', `${username}@${authenticated.data.apiKey}`, { maxAge: 3600 });
-
-        // TODO: Redirect.
-        console.log('Logged in.');
+        router.push('/feed');
       }
       setDisabled(false);
     })();
