@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, models } from 'mongoose';
 
 export interface IUser {
   id: string;
@@ -22,4 +22,4 @@ const userSchema = new Schema<IUser>({
   avatarFileName: { type: String, required: false },
   displayName: { type: String, required: false }
 });
-export const User = model<IUser>('User', userSchema);
+export default models['User'] || model<IUser>('User', userSchema);

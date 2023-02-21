@@ -8,7 +8,7 @@ import Layout from '../../components/Layout';
 function LoginPage() {
   const router = useRouter();
 
-  const [cookie, setCookie] = useCookies(['authentication']);
+  const [cookie, setCookie] = useCookies(['authorization']);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,18 +18,19 @@ function LoginPage() {
 
   useEffect(() => {
     (async () => {
-      if (cookie.authentication) {
+      if (cookie.authorization) {
         setDisabled(true);
         try {
-          await axios.post('/api/user/validate-authentication', {
-            authentication: cookie.authentication
+          await axios.post('/api/v1/user/validate-authorization', {
+            authorization: cookie.authorization
           });
         } catch (error) {
           setDisabled(false);
           setIncorrect(true);
-          setCookie('authentication', '', { maxAge: 0 });
+          setCookie('authorization', '', { maxAge: 0 });
           return;
         }
+        setCookie('authorization', `${username}@${cookie.authorization}`, { maxAge: 3600 });
         router.push('/feed');
         setDisabled(false);
       }
@@ -46,9 +47,9 @@ function LoginPage() {
       setIncorrect(false);
       setDisabled(true);
       if (password) {
-        let authenticated;
+        let authorization;
         try {
-          authenticated = await axios.post('/api/user/login', {
+          authorization = await axios.post('/api/v1/user/login', {
             username,
             password
           });
@@ -57,7 +58,7 @@ function LoginPage() {
           setIncorrect(true);
           return;
         }
-        setCookie('authentication', `${username}@${authenticated.data.apiKey}`, { maxAge: 3600 });
+        setCookie('authorization', `${username}@${authorization.data.apiKey}`, { maxAge: 3600 });
         router.push('/feed');
       }
       setDisabled(false);

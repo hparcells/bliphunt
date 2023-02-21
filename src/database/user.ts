@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
-import { IUser, User } from '../types/user';
+import User, { IUser } from '../types/user';
 
 /**
  * Gets a user from the database.
@@ -38,7 +38,7 @@ export async function ensureDefaultUser(): Promise<boolean> {
 }
 
 /**
- * Tries to authenticate a user.
+ * Tries to login a user.
  * @param username The username provided.
  * @param password The password provided.
  * @returns `true` if thh login was successful, `false` otherwise.
