@@ -43,7 +43,7 @@ export async function connect() {
   // Create a new promise if it doesn't exist.
   if (!cached.promise) {
     const connectionOptions: ConnectOptions = {
-      dbName: process.env.DATABASE_NAME
+      dbName: `${process.env.DATABASE_NAME}${process.env.NODE_ENV && '-dev'}`
     };
     cached.promise = mongoose.connect(databaseUrl, connectionOptions);
   }
