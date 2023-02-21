@@ -1,9 +1,9 @@
-'use client';
-
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+
+import Layout from '../../components/Layout';
 
 function LoginPage() {
   const router = useRouter();
@@ -65,7 +65,7 @@ function LoginPage() {
   }
 
   return (
-    <>
+    <Layout title='Login'>
       <p>Login</p>
       <form onSubmit={handleSubmit}>
         <label htmlFor='username'>Username</label>
@@ -91,7 +91,7 @@ function LoginPage() {
         <button type='submit'>Login</button>
       </form>
       {incorrect && <p>Incorrect username or password.</p>}
-    </>
+    </Layout>
   );
 }
 
