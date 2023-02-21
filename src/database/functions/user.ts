@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
-import User, { IUser } from '../types/user';
+import User, { ISafeUser, IUser } from '../../types/user';
 
 /**
  * Gets a user from the database.
@@ -41,14 +41,21 @@ export async function ensureDefaultUser(): Promise<boolean> {
  * Tries to login a user.
  * @param username The username provided.
  * @param password The password provided.
- * @returns `true` if thh login was successful, `false` otherwise.
+ * @returns Returns a user object if the login was successful, `false` otherwise.
  */
-export async function tryLogin(username: string, password: string): Promise<boolean> {
+export async function tryLogin(username: string, password: string): Promise<ISafeUser | null> {
   const user = await getUser(username);
   if (!user) {
-    return false;
+    return null;
   }
-  return await bcrypt.compare(password, user.password as string);
+
+  const success = await bcrypt.compare(password, user.password as string);
+  if (!success) {
+    return null;
+  }
+
+  user.password = undefined as any;
+  return user;
 }
 
 /**

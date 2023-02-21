@@ -1,15 +1,17 @@
 import { model, Schema, models } from 'mongoose';
 
-export interface IUser {
+export interface ISafeUser {
   id: string;
   username: string;
   email: string;
-  password: string;
   apiKey: string;
   createdAt: Date;
 
   avatarFileName?: string;
   displayName?: string;
+}
+export interface IUser extends ISafeUser {
+  password: string;
 }
 const userSchema = new Schema<IUser>({
   id: { type: String, required: true, unique: true },

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { getApiKey, tryLogin } from '../../../../database/user';
+import { tryLogin } from '../../../../database/functions/user';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data: {
@@ -8,11 +8,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     password: string;
   } = req.body;
 
-  const success = await tryLogin(data.username, data.password);
-  if (!success) {
+  const user = await tryLogin(data.username, data.password);
+  if (!user) {
     res.status(401).end();
     return;
   }
-  res.send({ apiKey: await getApiKey(data.username) });
+
+  res.send({ user });
 }
 export default handler;

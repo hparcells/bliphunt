@@ -1,10 +1,12 @@
-import Layout from '../components/Layout';
+import Link from 'next/link';
+import Page from '../components/Page';
 
 function IndexPage() {
   return (
-    <Layout>
+    <Page>
       <p>Initial app.</p>
-    </Layout>
+      <Link href='/feed'>Feed</Link>
+    </Page>
   );
 }
 

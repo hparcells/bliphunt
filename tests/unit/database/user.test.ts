@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as dotenv from 'dotenv';
 
-import { getUser, ensureDefaultUser, tryLogin, getApiKey } from '../../../src/database/user';
+import { getUser, ensureDefaultUser, tryLogin, getApiKey } from '../../../src/database/functions/user';
 
 dotenv.config();
 
@@ -75,20 +75,21 @@ describe('User Database Functions', () => {
   it('Successful login.', async () => {
     await ensureDefaultUser();
     const success = await tryLogin('default123', 'default123');
-
-    expect(success).toBe(true);
+    
+    expect(success).not.toBeNull();
+    // TODO: Add more conditions.
   });
   it('Failed login with a user that doens\'t exist.', async () => {
     await ensureDefaultUser();
     const success = await tryLogin('default123456', 'default123456');
 
-    expect(success).toBe(false);
+    expect(success).toBe(null);
   });
   it('Failed login with a wrong password.', async () => {
     await ensureDefaultUser();
     const success = await tryLogin('default123', 'default123456');
 
-    expect(success).toBe(false);
+    expect(success).toBe(null);
   });
   it('Get API key works.', async () => {
     await ensureDefaultUser();

@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { server as serverLog } from 'log-type';
 
 import { connect } from '../database/database';
-import { ensureDefaultUser } from '../database/user';
+import { ensureDefaultUser } from '../database/functions/user';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const port = process.env.PORT || 8000;

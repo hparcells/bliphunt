@@ -1,12 +1,14 @@
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import Layout from '../../components/Layout';
+import { useAuth } from '../../hooks/auth';
+
+import Page from '../../components/Page';
 
 function LoginPage() {
   const router = useRouter();
+  const auth = useAuth();
 
   const [cookie, setCookie] = useCookies(['authorization']);
 
@@ -17,25 +19,14 @@ function LoginPage() {
   const [incorrect, setIncorrect] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      if (cookie.authorization) {
-        setDisabled(true);
-        try {
-          await axios.post('/api/v1/user/validate-authorization', {
-            authorization: cookie.authorization
-          });
-        } catch (error) {
-          setDisabled(false);
-          setIncorrect(true);
-          setCookie('authorization', '', { maxAge: 0 });
-          return;
-        }
-        setCookie('authorization', `${username}@${cookie.authorization}`, { maxAge: 3600 });
-        router.push('/feed');
-        setDisabled(false);
-      }
-    })();
-  }, []);
+    if (auth.user) {
+      router.push('/feed');
+
+      // Just in case.
+      setUsername('');
+      setPassword('');
+    }
+  }, [auth]);
   useEffect(() => {
     setIncorrect(false);
   }, [username, password]);
@@ -46,27 +37,27 @@ function LoginPage() {
     (async () => {
       setIncorrect(false);
       setDisabled(true);
+
       if (password) {
-        let authorization;
-        try {
-          authorization = await axios.post('/api/v1/user/login', {
-            username,
-            password
+        const success = await auth.login(username, password);
+        if (success) {
+          setCookie('authorization', `${auth.user?.username}@${auth.user?.apiKey}`, {
+            maxAge: 3600
           });
-        } catch (error) {
+          router.push('/feed');
           setDisabled(false);
-          setIncorrect(true);
           return;
         }
-        setCookie('authorization', `${username}@${authorization.data.apiKey}`, { maxAge: 3600 });
-        router.push('/feed');
+        // If we are incorrect.
+        setIncorrect(true);
       }
+      // Fallback.
       setDisabled(false);
     })();
   }
 
   return (
-    <Layout title='Login'>
+    <Page title='Login'>
       <p>Login</p>
       <form onSubmit={handleSubmit}>
         <label htmlFor='username'>Username</label>
@@ -92,7 +83,7 @@ function LoginPage() {
         <button type='submit'>Login</button>
       </form>
       {incorrect && <p>Incorrect username or password.</p>}
-    </Layout>
+    </Page>
   );
 }
 

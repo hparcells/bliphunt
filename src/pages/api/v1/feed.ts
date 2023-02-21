@@ -8,6 +8,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
+  // TODO:
   await res.send({});
 }
 export default handler;
