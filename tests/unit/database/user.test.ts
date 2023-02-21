@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as dotenv from 'dotenv';
 
-import { getUser, ensureDefaultUser, tryLogin, getApiKey } from '../../../src/database/functions/user';
+import { getUser, ensureDefaultUser, tryLogin } from '../../../src/database/functions/user';
 
 dotenv.config();
 
@@ -90,18 +90,5 @@ describe('User Database Functions', () => {
     const success = await tryLogin('default123', 'default123456');
 
     expect(success).toBe(null);
-  });
-  it('Get API key works.', async () => {
-    await ensureDefaultUser();
-    const user = await getUser('default123');
-    const fetchedApiKey = await getApiKey('default123');
-
-    expect(fetchedApiKey).toBe(user?.apiKey);
-  });
-  it('Get API of a non-existing user returns null.', async () => {
-    await ensureDefaultUser();
-    const fetchedApiKey = await getApiKey('default123456');
-
-    expect(fetchedApiKey).toBeNull();
   });
 });

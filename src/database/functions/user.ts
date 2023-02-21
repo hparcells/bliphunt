@@ -57,16 +57,3 @@ export async function tryLogin(username: string, password: string): Promise<ISaf
   user.password = undefined as any;
   return user;
 }
-
-/**
- * Get's a user's API key.
- * @param username The username to get the API key for.
- * @returns The API key of the user.
- */
-export async function getApiKey(username: string): Promise<string | null> {
-  const user = await getUser(username);
-  if (!user) {
-    return null;
-  }
-  return user.apiKey;
-}
