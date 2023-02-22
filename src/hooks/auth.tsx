@@ -11,7 +11,7 @@ const AuthContext = createContext(null as any);
 export function useAuth(): {
   user: ISafeUser | null;
   setNewUser: (user: ISafeUser) => void;
-  login: (username: string, password: string) => Promise<ISafeUser | null>;
+  login: (usernameEmail: string, password: string) => Promise<ISafeUser | null>;
   logOut: () => void;
 } {
   return useContext(AuthContext);
@@ -27,11 +27,11 @@ function useProvideAuth() {
     setUser(user);
   }
 
-  async function login(username: string, password: string): Promise<ISafeUser | null> {
+  async function login(usernameEmail: string, password: string): Promise<ISafeUser | null> {
     let response: AxiosResponse<{ user: ISafeUser }>;
     try {
       response = await axios.post('/api/v1/user/login', {
-        username,
+        usernameEmail,
         password
       });
     } catch (error) {

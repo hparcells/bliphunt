@@ -5,12 +5,21 @@ import crypto from 'crypto';
 import User, { ISafeUser, IUser } from '../../types/user';
 
 /**
- * Gets a user from the database.
+ * Gets a user from the database by their username.
  * @param username The username to get the user for.
- * @returns The user. `null` if the user doesn't exist.
+ * @returns The user, `null` if the user doesn't exist.
  */
-export async function getUser(username: string): Promise<IUser | null> {
+export async function getUserByUsername(username: string): Promise<IUser | null> {
   return await User.findOne({ username });
+}
+
+/**
+ * Gets a user from the database by their email.
+ * @param email The email to look for.
+ * @returns The user, `null` if the user doesn't exist.
+ */
+export async function getUserByEmail(email: string): Promise<IUser | null> {
+  return await User.findOne({ email });
 }
 
 /**
@@ -22,7 +31,7 @@ export async function getUser(username: string): Promise<IUser | null> {
  */
 export async function ensureDefaultUser(): Promise<boolean> {
   // If the user doesn't exist, create it.
-  if (!(await getUser('default123'))) {
+  if (!(await getUserByUsername('default123'))) {
     const user = new User({
       id: uuidv4(),
       username: 'default123',
@@ -43,17 +52,46 @@ export async function ensureDefaultUser(): Promise<boolean> {
  * @param password The password provided.
  * @returns Returns a user object if the login was successful, `false` otherwise.
  */
-export async function tryLogin(username: string, password: string): Promise<ISafeUser | null> {
-  const user = await getUser(username);
+export async function tryLoginWithUsername(
+  username: string,
+  password: string
+): Promise<ISafeUser | null> {
+  // Check if the user exists.
+  const user = await getUserByUsername(username);
   if (!user) {
     return null;
   }
 
+  // Check if password matches.
   const success = await bcrypt.compare(password, user.password as string);
   if (!success) {
     return null;
   }
 
+  // Don't send the password hash to the client.
   user.password = undefined as any;
+
+  return user;
+}
+
+export async function tryLoginWithEmail(
+  email: string,
+  password: string
+): Promise<ISafeUser | null> {
+  // Check if the user exists.
+  const user = await getUserByEmail(email);
+  if (!user) {
+    return null;
+  }
+
+  // Check if password matches.
+  const success = await bcrypt.compare(password, user.password as string);
+  if (!success) {
+    return null;
+  }
+
+  // Don't send the password hash to the client.
+  user.password = undefined as any;
+
   return user;
 }

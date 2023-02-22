@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { getUser } from '../../../../database/functions/user';
+import { getUserByUsername } from '../../../../database/functions/user';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data: { authorization: string } = req.body;
   const username = data.authorization.split('@')[0];
   const apiKey = data.authorization.split('@')[1];
 
-  const user = await getUser(username);
+  const user = await getUserByUsername(username);
 
   // If the user doesn't exist.
   if (!user) {

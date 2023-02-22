@@ -12,7 +12,7 @@ function LoginPage() {
 
   const [cookie, setCookie] = useCookies(['authorization']);
 
-  const [username, setUsername] = useState('');
+  const [usernameEmail, setUsernameEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [disabled, setDisabled] = useState(false);
@@ -23,13 +23,13 @@ function LoginPage() {
       router.push('/feed');
 
       // Just in case.
-      setUsername('');
+      setUsernameEmail('');
       setPassword('');
     }
   }, [auth]);
   useEffect(() => {
     setIncorrect(false);
-  }, [username, password]);
+  }, [usernameEmail, password]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -39,7 +39,7 @@ function LoginPage() {
       setDisabled(true);
 
       if (password) {
-        const user = await auth.login(username, password);
+        const user = await auth.login(usernameEmail, password);
         if (user) {
           setCookie('authorization', `${user.username}@${user.apiKey}`, {
             maxAge: 3600
@@ -60,13 +60,13 @@ function LoginPage() {
     <Page title='Login'>
       <p>Login</p>
       <form onSubmit={handleSubmit}>
-        <label htmlFor='username'>Username</label>
+        <label htmlFor='username'>Username or Email</label>
         <input
           type='text'
           id='username'
-          value={username}
+          value={usernameEmail}
           onChange={(e) => {
-            return setUsername(e.target.value);
+            return setUsernameEmail(e.target.value);
           }}
           disabled={disabled}
         />
