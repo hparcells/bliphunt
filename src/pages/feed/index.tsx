@@ -11,6 +11,7 @@ function FeedPage() {
       <p>Feed</p>
       <Link href='/'>Back to home</Link>
       <p>{JSON.stringify(auth)}</p>
+      <button onClick={auth.logOut}>Logout</button>
     </Page>
   );
 }

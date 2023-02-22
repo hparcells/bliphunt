@@ -39,9 +39,9 @@ function LoginPage() {
       setDisabled(true);
 
       if (password) {
-        const success = await auth.login(username, password);
-        if (success) {
-          setCookie('authorization', `${auth.user?.username}@${auth.user?.apiKey}`, {
+        const user = await auth.login(username, password);
+        if (user) {
+          setCookie('authorization', `${user.username}@${user.apiKey}`, {
             maxAge: 3600
           });
           router.push('/feed');
