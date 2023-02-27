@@ -4,14 +4,17 @@
         "tests/",
         ".eslintrc",
         ".prettierrc",
-        "cspell.json"
+        "cspell.json",
+        "package.json"
     ],
     "words": [
         "bliphunt",
         "hunterparcells",
+        "Mantine",
         "nextjs",
         "pageview",
         "RYTJPJ",
+        "stylis",
         "uuidv"
     ]
 }

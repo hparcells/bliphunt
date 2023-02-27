@@ -3,8 +3,9 @@ import Head from 'next/head';
 import { useEffect } from 'react';
 import { CookiesProvider } from 'react-cookie';
 import ReactGA from 'react-ga4';
+import { MantineProvider } from '@mantine/core';
 
-import { ProvideAuth, useAuth } from '../hooks/auth';
+import { ProvideAuth } from '../hooks/auth';
 
 import '../styles/global.scss';
 
@@ -27,7 +28,9 @@ function App({ Component, pageProps }: AppProps) {
       </Head>
       <CookiesProvider>
         <ProvideAuth>
-          <Component {...pageProps} />
+          <MantineProvider theme={{ colorScheme: 'dark' }} withGlobalStyles withNormalizeCSS>
+            <Component {...pageProps} />
+          </MantineProvider>
         </ProvideAuth>
       </CookiesProvider>
     </>

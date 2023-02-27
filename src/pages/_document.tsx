@@ -1,18 +1,22 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+import { createGetInitialProps } from '@mantine/next';
+import NextDocument, { Html, Head, Main, NextScript } from 'next/document';
 
-const DESCRIPTION =
-  'Portfolio website for Hunter Parcells. Be sure to check out The Archives for more!';
+const getInitialProps = createGetInitialProps();
 
-function Document() {
-  return (
-    <Html>
-      <Head>{/* TODO: All the meta tags. */}</Head>
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+class Document extends NextDocument {
+  static getInitialProps = getInitialProps;
+
+  render() {
+    return (
+      <Html>
+        <Head>{/* TODO: All the meta tags. */}</Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
 }
 
 export default Document;

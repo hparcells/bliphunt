@@ -1,6 +1,21 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import {
+  Title,
+  Container,
+  Text,
+  Anchor,
+  Paper,
+  TextInput,
+  PasswordInput,
+  Button,
+  Checkbox
+} from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
+
+import { isValidEmail } from '../../util/email';
 
 import { useAuth } from '../../hooks/auth';
 
@@ -10,79 +25,113 @@ function LoginPage() {
   const router = useRouter();
   const auth = useAuth();
 
-  const [cookie, setCookie] = useCookies(['authorization']);
+  const [rememberMe, toggleRememberMe] = useToggle();
+  const [loading, setLoading] = useState(false);
 
-  const [usernameEmail, setUsernameEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [disabled, setDisabled] = useState(false);
-  const [incorrect, setIncorrect] = useState(false);
+  const [, setCookie] = useCookies(['authorization']);
+  const form = useForm({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+    validate: {
+      email: (value) => {
+        return isValidEmail(value) ? null : 'Invalid email';
+      },
+      password: (value) => {
+        if (!value) {
+          return 'Password is required';
+        }
+        return value.length >= 8 ? null : 'Incorrect password';
+      }
+    }
+  });
 
   useEffect(() => {
     if (auth.user) {
       router.push('/feed');
 
       // Just in case.
-      setUsernameEmail('');
-      setPassword('');
+      form.reset();
     }
   }, [auth]);
-  useEffect(() => {
-    setIncorrect(false);
-  }, [usernameEmail, password]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(
+    event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
     event.preventDefault();
 
     (async () => {
-      setIncorrect(false);
-      setDisabled(true);
+      if (form.isValid()) {
+        setLoading(true);
 
-      if (password) {
-        const user = await auth.login(usernameEmail, password);
+        const user = await auth.login(form.values.email, form.values.password);
         if (user) {
-          setCookie('authorization', `${user.username}@${user.apiKey}`, {
-            maxAge: 3600
-          });
+          // If "Remember me" is checked.
+          if (rememberMe) {
+            setCookie('authorization', `${user.username}@${user.apiKey}`, {
+              maxAge: 3600
+            });
+          }
           router.push('/feed');
-          setDisabled(false);
+
+          setLoading(false);
           return;
         }
+
         // If we are incorrect.
-        setIncorrect(true);
+        form.setFieldValue('password', '');
+        form.setFieldError('password', 'Incorrect password');
+        setLoading(false);
+      } else {
+        form.validate();
       }
-      // Fallback.
-      setDisabled(false);
     })();
   }
 
   return (
     <Page title='Login'>
-      <p>Login</p>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor='username'>Username or Email</label>
-        <input
-          type='text'
-          id='username'
-          value={usernameEmail}
-          onChange={(e) => {
-            return setUsernameEmail(e.target.value);
-          }}
-          disabled={disabled}
-        />
-        <label htmlFor='password'>Password</label>
-        <input
-          type='password'
-          id='password'
-          value={password}
-          onChange={(e) => {
-            return setPassword(e.target.value);
-          }}
-          disabled={disabled}
-        />
-        <button type='submit'>Login</button>
-      </form>
-      {incorrect && <p>Incorrect username or password.</p>}
+      <Container size={500} my='5em'>
+        <Title align='center'>Welcome back!</Title>
+        <Text color='dimmed' size='sm' align='center' mt='0.5em'>
+          Do not have an account yet?{' '}
+          <Anchor<'a'>
+            href='#'
+            size='sm'
+            // onClick={}
+          >
+            Create account
+          </Anchor>
+        </Text>
+
+        <Paper withBorder shadow='md' p='xl' mt={30} radius='md'>
+          <TextInput
+            label='Email address'
+            required
+            {...form.getInputProps('email')}
+            disabled={loading}
+          />
+          <PasswordInput
+            label='Password'
+            required
+            mt='sm'
+            {...form.getInputProps('password')}
+            disabled={loading}
+          />
+          <Checkbox
+            label='Remember me'
+            mt='sm'
+            checked={rememberMe}
+            onChange={(event) => {
+              toggleRememberMe();
+            }}
+          />
+
+          <Button fullWidth mt='xl' onClick={handleSubmit} loading={loading}>
+            Sign in
+          </Button>
+        </Paper>
+      </Container>
     </Page>
   );
 }
