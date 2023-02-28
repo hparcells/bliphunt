@@ -1,11 +1,14 @@
 # bliphunt
 > Issue and feature tracking for any app.
 
+![wakatime](https://wakatime.com/badge/user/6b7d9181-edde-4a25-857c-e7101bfee7ea/project/e72e4a24-5f08-4188-a52a-b588d4d891d6.svg?style=for-the-badge)
+
 ## Running Locally
 ### Downloading
 You can clone this repository and install any needed dependencies by using:
 ```
 git clone https://github.com/hparcells/bliphunt.git
+cd bliphunt
 npm i
 ```
 
@@ -29,9 +32,9 @@ Given that the MongoDB database is running, you can start the website in a devel
 npm run dev
 ```
 
-Building the app is run using:
+Alternatively, you can run a production build by running:
 ```
-npm run build
+npm run production
 ```
 This will run all the Jest tests along with building the server and client. The server will be output into the `/dist` directory and will need `/dist/server/server.js` to be run for everything to start.
 

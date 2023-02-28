@@ -1,7 +1,9 @@
 # Folders
+cypress/
 tests/
 
 # Files
+cypress.config.ts
 jest.config.ts
 next.config.js
 sentry.client.config.js

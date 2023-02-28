@@ -2,9 +2,6 @@
 
 .env
 
-# Turbo
-.turbo/
-
 # dependencies
 /node_modules
 /.pnp
@@ -41,5 +38,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Turbo
+.turbo/
+
 # Sentry
 .sentryclirc
+
+# Cypress
+cypress/downloads
+cypress/screenshots
+cypress/videos

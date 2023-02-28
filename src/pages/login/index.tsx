@@ -110,6 +110,7 @@ function LoginPage() {
             required
             {...form.getInputProps('email')}
             disabled={loading}
+            name='email'
           />
           <PasswordInput
             label='Password'
@@ -117,6 +118,7 @@ function LoginPage() {
             mt='sm'
             {...form.getInputProps('password')}
             disabled={loading}
+            name='password'
           />
           <Checkbox
             label='Remember me'
@@ -125,9 +127,10 @@ function LoginPage() {
             onChange={(event) => {
               toggleRememberMe();
             }}
+            name='rememberMe'
           />
 
-          <Button fullWidth mt='xl' onClick={handleSubmit} loading={loading}>
+          <Button fullWidth mt='xl' onClick={handleSubmit} loading={loading} name='login'>
             Sign in
           </Button>
         </Paper>
