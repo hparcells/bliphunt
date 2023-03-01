@@ -26,14 +26,14 @@ function LoginPage() {
   const router = useRouter();
   const auth = useAuth();
 
-  const [rememberMe, toggleRememberMe] = useToggle();
   const [loading, setLoading] = useState(false);
 
   const [, setCookie] = useCookies(['authorization']);
   const form = useForm({
     initialValues: {
       email: '',
-      password: ''
+      password: '',
+      rememberMe: false
     },
     validate: {
       email: (value) => {
@@ -57,9 +57,7 @@ function LoginPage() {
     }
   }, [auth]);
 
-  function handleSubmit(
-    event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
 
     (async () => {
@@ -69,7 +67,7 @@ function LoginPage() {
         const user = await auth.login(form.values.email, form.values.password);
         if (user) {
           // If "Remember me" is checked.
-          if (rememberMe) {
+          if (form.values.rememberMe) {
             setCookie('authorization', `${user.username}@${user.apiKey}`, {
               maxAge: 3600
             });
@@ -120,10 +118,7 @@ function LoginPage() {
           <Checkbox
             label='Remember me'
             mt='sm'
-            checked={rememberMe}
-            onChange={(event) => {
-              toggleRememberMe();
-            }}
+            {...form.getInputProps('rememberMe')}
             name='rememberMe'
           />
 
