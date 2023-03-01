@@ -47,7 +47,7 @@ export async function ensureDefaultUser(): Promise<boolean> {
 }
 
 /**
- * Tries to login a user.
+ * Tries to login a user with their username.
  * @param username The username provided.
  * @param password The password provided.
  * @returns Returns a user object if the login was successful, `false` otherwise.
@@ -74,6 +74,12 @@ export async function tryLoginWithUsername(
   return user;
 }
 
+/**
+ * Tries to login a user with their email.
+ * @param username The username provided.
+ * @param password The password provided.
+ * @returns Returns a user object if the login was successful, `false` otherwise.
+ */
 export async function tryLoginWithEmail(
   email: string,
   password: string

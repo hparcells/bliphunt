@@ -1,7 +1,7 @@
 import { isValidEmail } from '../../src/util/email';
 
 describe("Utility - Email", () => {
-  it('Valid email checker works.', () => {
+  it('validates emails correctly', () => {
     expect(isValidEmail('username')).toBe(false);
     expect(isValidEmail('username.com')).toBe(false);
     expect(isValidEmail('username@')).toBe(false);

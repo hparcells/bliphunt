@@ -36,7 +36,7 @@ afterAll(async () => {
 });
 
 describe('Default User Behavior', () => {
-  it('Default user is created.', async () => {
+  it('creates a default user', async () => {
     const created = await ensureDefaultUser();
     const user = await getUserByUsername('default123');
 
@@ -52,7 +52,7 @@ describe('Default User Behavior', () => {
     // Function should return true if the account is created.
     expect(created).toBe(true);
   });
-  it('Default user is not created if it exists.', async () => {
+  it('does not create the default user if it esists', async () => {
     // Create the first user.
     const createdFirst = await ensureDefaultUser();
     expect(createdFirst).toBe(true);
@@ -64,44 +64,44 @@ describe('Default User Behavior', () => {
 });
 
 describe('User Fetch', () => {
-  it('Gets a user by their username from the database.', async () => {
+  it('gets a user from the database by their username', async () => {
     await ensureDefaultUser();
     const user = await getUserByUsername('default123');
 
     expect(user).not.toBeNull();
   });
-  it('Getting a user by their username that doesn\'t exist returns null.', async () => {
+  it('returns null when getting a user by a username that doens\'t exist', async () => {
     const user = await getUserByUsername('default123');
 
     expect(user).toBeNull();
   });
-  it('Gets a user by their email from the database.', async () => {
+  it('gets a user from the database by their email', async () => {
     await ensureDefaultUser();
     const user = await getUserByEmail('default@example.com');
 
     expect(user).not.toBeNull();
   });
-  it('Getting a user by their email that doesn\'t exist returns null.', async () => {
+  it('returns null when getting a user by an email that doens\'t exist', async () => {
     const user = await getUserByEmail('notdefault@notexample.net');
 
     expect(user).toBeNull();
   });
 });
 describe('User Authentication with Username', () => {
-  it('Successful login.', async () => {
+  it('logs in and returns the user with correct information', async () => {
     await ensureDefaultUser();
     const success = await tryLoginWithUsername('default123', 'default123');
     
     expect(success).not.toBeNull();
     // TODO: Add more conditions.
   });
-  it('Failed login with a username that doens\'t exist returns null.', async () => {
+  it('returns null when logging in with a username that doesn\'t exist', async () => {
     await ensureDefaultUser();
     const success = await tryLoginWithUsername('default123456', 'default123456');
 
     expect(success).toBe(null);
   });
-  it('Failed login with a wrong password returns null.', async () => {
+  it('returns null when logging in with an incorrect password', async () => {
     await ensureDefaultUser();
     const success = await tryLoginWithUsername('default123', 'default123456');
 
@@ -109,20 +109,20 @@ describe('User Authentication with Username', () => {
   });
 });
 describe('User Authentication with Email', () => {
-  it('Successful login.', async () => {
+  it('logs in and returns the user with correct information', async () => {
     await ensureDefaultUser();
     const success = await tryLoginWithEmail('default@example.com', 'default123');
     
     expect(success).not.toBeNull();
     // TODO: Add more conditions.
   });
-  it('Failed login with an email that doens\'t exist returns null.', async () => {
+  it('returns null when logging in with an email that doesn\'t exist', async () => {
     await ensureDefaultUser();
     const success = await tryLoginWithEmail('notdefault@notexample.net', 'default123456');
 
     expect(success).toBe(null);
   });
-  it('Failed login with a wrong password returns null.', async () => {
+  it('returns null when logging in with an incorrect password', async () => {
     await ensureDefaultUser();
     const success = await tryLoginWithEmail('default@example.com', 'default123456');
 

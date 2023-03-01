@@ -1,5 +1,5 @@
 describe('Login Page', () => {
-  it('Logs In with Correct Information', () => {
+  it('logs in with correct information', () => {
     cy.intercept('/api/v1/user/login').as('login');
 
     cy.visit('http://localhost:8000/login');
@@ -28,7 +28,7 @@ describe('Login Page', () => {
     cy.url().should('include', '/feed');
   });
 
-  it('Does Not Log In Incorrect Information', () => {
+  it('does not log in with incorrect information', () => {
     cy.intercept('/api/v1/user/login').as('login');
 
     cy.visit('http://localhost:8000/login');
@@ -47,7 +47,7 @@ describe('Login Page', () => {
 
   });
 
-  it('Handles Invalid Form Input', () => {
+  it('handles invalid form input appropriately', () => {
     cy.visit('http://localhost:8000/login');
 
     cy.get('input[name=email]').type('default@example');
@@ -60,7 +60,7 @@ describe('Login Page', () => {
     cy.contains('Incorrect password').should('exist');
   });
 
-  it('Doesn\'t Stay Logged in without Remember Me', () => {
+  it('doesn\'t stay logged in without remember me option', () => {
     cy.intercept('/api/v1/user/login').as('login');
 
     cy.visit('http://localhost:8000/login');
@@ -74,7 +74,7 @@ describe('Login Page', () => {
     cy.getCookie('authorization').should('not.exist');
   });
 
-  it('Stays Logged in without Remember Me', () => {
+  it('stays logged in with remember me option', () => {
     cy.intercept('/api/v1/user/login').as('login');
 
     cy.visit('http://localhost:8000/login');
@@ -88,8 +88,23 @@ describe('Login Page', () => {
     cy.reload();
     cy.getCookie('authorization').should('exist');
   });
+
+  it('redirects to feed if already logged in on the login page', () => {
+    cy.intercept('/api/v1/user/login').as('login');
+
+    cy.visit('http://localhost:8000/login');
+    cy.get('input[name=email]').type('default@example.com');
+    cy.get('input[name=password]').type('default123');
+    cy.get('input[name=rememberMe]').check();
+    
+    cy.get('button[name=login]').click();
+    cy.wait('@login');
+
+    cy.visit('http://localhost:8000/login');
+    cy.url().should('include', '/feed');
+  });
   
-  it('Other Functions Work', () => {
+  it('toggle password visibility works', () => {
     cy.visit('http://localhost:8000/login');
     cy.get('input[name=password]').type('default123');
     cy.get('input[name=password]').should('have.prop', 'type', 'password');

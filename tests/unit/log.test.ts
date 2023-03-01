@@ -1,7 +1,7 @@
 import { databaseLog } from '../../src/util/log';
 
 describe("Utility - Log", () => {
-  it('Database log works.', () => {
+  it('logs with prefix', () => {
     const logSpy = jest.spyOn(global.console, 'log');
                         
     databaseLog("Test.");
