@@ -20,6 +20,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
+  // Don't send the password hash to the client.
+  user.password = undefined as any;
+
   // If the user exists in the end.
   res.send({ user });
 }
