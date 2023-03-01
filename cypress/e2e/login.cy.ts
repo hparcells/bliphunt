@@ -1,4 +1,31 @@
 describe('Login Page', () => {
+  it('exists', () => {
+    cy.visit('http://localhost:8000/login');
+    cy.contains('Welcome back!').should('exist');
+  });
+  
+  it('redirects to feed if already logged in', () => {
+    cy.intercept('/api/v1/user/login').as('login');
+
+    cy.visit('http://localhost:8000/login');
+    cy.get('input[name=email]').type('default@example.com');
+    cy.get('input[name=password]').type('default123');
+    cy.get('input[name=rememberMe]').check();
+    
+    cy.get('button[name=login]').click();
+    cy.wait('@login');
+
+    cy.visit('http://localhost:8000/login');
+    cy.url().should('include', '/feed');
+  });
+
+  it('goes to registration page when clicking "Create account"', () => {
+    cy.visit('http://localhost:8000/login');
+
+    cy.contains('Create account').click();
+    cy.url().should('include', '/register');
+  });
+  
   it('logs in with correct information', () => {
     cy.intercept('/api/v1/user/login').as('login');
 
@@ -87,21 +114,6 @@ describe('Login Page', () => {
     cy.getCookie('authorization').should('exist');
     cy.reload();
     cy.getCookie('authorization').should('exist');
-  });
-
-  it('redirects to feed if already logged in on the login page', () => {
-    cy.intercept('/api/v1/user/login').as('login');
-
-    cy.visit('http://localhost:8000/login');
-    cy.get('input[name=email]').type('default@example.com');
-    cy.get('input[name=password]').type('default123');
-    cy.get('input[name=rememberMe]').check();
-    
-    cy.get('button[name=login]').click();
-    cy.wait('@login');
-
-    cy.visit('http://localhost:8000/login');
-    cy.url().should('include', '/feed');
   });
   
   it('toggle password visibility works', () => {

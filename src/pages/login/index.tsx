@@ -14,6 +14,7 @@ import {
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
+import Link from 'next/link';
 
 import { isValidEmail } from '../../util/email';
 
@@ -95,11 +96,7 @@ function LoginPage() {
         <Title align='center'>Welcome back!</Title>
         <Text color='dimmed' size='sm' align='center' mt='0.5em'>
           Do not have an account yet?{' '}
-          <Anchor<'a'>
-            href='#'
-            size='sm'
-            // onClick={}
-          >
+          <Anchor component={Link} href='/register' size='sm'>
             Create account
           </Anchor>
         </Text>
