@@ -12,7 +12,7 @@ import {
   Button,
   Checkbox
 } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
+import { getHotkeyHandler, useToggle } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import Link from 'next/link';
 
@@ -57,8 +57,13 @@ function LoginPage() {
     }
   }, [auth]);
 
-  function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleSubmit(
+    event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLElement> | KeyboardEvent
+  ) {
     event.preventDefault();
+
+    // Unfocus the text input.
+    (document.activeElement as HTMLElement).blur();
 
     (async () => {
       if (form.isValid()) {
@@ -106,6 +111,7 @@ function LoginPage() {
             {...form.getInputProps('email')}
             disabled={loading}
             name='email'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <PasswordInput
             label='Password'
@@ -114,6 +120,7 @@ function LoginPage() {
             {...form.getInputProps('password')}
             disabled={loading}
             name='password'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <Checkbox
             label='Remember me'
