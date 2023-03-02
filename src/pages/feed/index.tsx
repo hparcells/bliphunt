@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Page from '../../components/Page';
+import Layout from '../../components/Layout/Layout';
 
 import { useAuth } from '../../hooks/auth';
 
@@ -7,12 +7,12 @@ function FeedPage() {
   const auth = useAuth();
 
   return (
-    <Page title='Feed'>
+    <Layout title='Feed'>
       <p>Feed</p>
       <Link href='/'>Back to home</Link>
       <p>{JSON.stringify(auth)}</p>
       <button onClick={auth.logOut}>Logout</button>
-    </Page>
+    </Layout>
   );
 }
 
