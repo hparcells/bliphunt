@@ -12,7 +12,7 @@ import {
   Button,
   Checkbox
 } from '@mantine/core';
-import { getHotkeyHandler, useToggle } from '@mantine/hooks';
+import { getHotkeyHandler } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import Link from 'next/link';
 
