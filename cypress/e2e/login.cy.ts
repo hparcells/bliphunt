@@ -18,9 +18,6 @@ describe('Authorization', () => {
     cy.get('input[name=email]').type('default@example.com');
     cy.get('input[name=password]').type('default123');
 
-    cy.get('input[name=email]').should('have.value', 'default@example.com');
-    cy.get('input[name=password]').should('have.value', 'default123');
-
     cy.get('button[name=login]').click();
     cy.wait('@login').then((intercept) => {      
       expect(intercept.request.body).to.contain({
@@ -71,6 +68,16 @@ describe('Client Side Logic', () => {
 
     cy.contains('Create account').click();
     cy.url().should('include', '/register');
+  });
+
+  it('accepts values in all fields', () => {
+    cy.get('input[name=email]').type('default@example.com');
+    cy.get('input[name=password]').type('default123');
+    cy.get('input[name=rememberMe]').check()
+
+    cy.get('input[name=email]').should('have.value', 'default@example.com');
+    cy.get('input[name=password]').should('have.value', 'default123');
+    cy.get('input[name=rememberMe]').should('be.checked');
   });
 
   it('handles invalid form input appropriately', () => {

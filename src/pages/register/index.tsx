@@ -109,8 +109,7 @@ function Register() {
             required
             {...form.getInputProps('username')}
             disabled={loading}
-            name='email'
-            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
+            name='username'
           />
           <TextInput
             label='Email address'
@@ -127,8 +126,7 @@ function Register() {
             mt='sm'
             {...form.getInputProps('password')}
             disabled={loading}
-            name='email'
-            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
+            name='password'
           />
           <PasswordInput
             label='Confirm password'
@@ -136,8 +134,7 @@ function Register() {
             mt='sm'
             {...form.getInputProps('confirmPassword')}
             disabled={loading}
-            name='email'
-            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
+            name='confirmPassword'
           />
           <Checkbox
             label={
@@ -154,11 +151,17 @@ function Register() {
             }
             mt='sm'
             {...form.getInputProps('terms')}
+            name='terms'
           />
           <Button fullWidth mt='xl' onClick={handleSubmit} loading={loading} name='register'>
             Register
           </Button>
         </Paper>
+        <Text mt='sm'>
+          <Anchor component={Link} href='/' color='dimmed'>
+            Back to home
+          </Anchor>
+        </Text>
       </Container>
     </Page>
   );
