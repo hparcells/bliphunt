@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import Link from 'next/link';
 import { useForm } from '@mantine/form';
+import { getHotkeyHandler } from '@mantine/hooks';
 
 import Page from '../../components/Page';
 
@@ -71,8 +72,13 @@ function Register() {
     }
   }, [auth]);
 
-  function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleSubmit(
+    event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLElement> | KeyboardEvent
+  ) {
     event.preventDefault();
+
+    // Unfocus the text input.
+    (document.activeElement as HTMLElement).blur();
 
     (async () => {
       if (form.isValid()) {
@@ -104,6 +110,7 @@ function Register() {
             {...form.getInputProps('username')}
             disabled={loading}
             name='email'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <TextInput
             label='Email address'
@@ -112,6 +119,7 @@ function Register() {
             {...form.getInputProps('email')}
             disabled={loading}
             name='email'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <PasswordInput
             label='Password'
@@ -120,6 +128,7 @@ function Register() {
             {...form.getInputProps('password')}
             disabled={loading}
             name='email'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <PasswordInput
             label='Confirm password'
@@ -128,6 +137,7 @@ function Register() {
             {...form.getInputProps('confirmPassword')}
             disabled={loading}
             name='email'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <Checkbox
             label={

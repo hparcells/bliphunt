@@ -101,3 +101,20 @@ export async function tryLoginWithEmail(
 
   return user;
 }
+
+/**
+ * Checks if a user's authorization is valid.
+ * @param authorization The user's authorization formatted as `USERNAME@API_KEY`.
+ * @returns True if the authorization is valid, false otherwise.
+ */
+export async function validateAuthorization(authorization: string): Promise<boolean> {
+  const username = authorization.split('@')[0];
+  const apiKey = authorization.split('@')[1];
+
+  const user = await getUserByUsername(username);
+
+  if (!user || apiKey !== user.apiKey) {
+    return false;
+  }
+  return true;
+}
