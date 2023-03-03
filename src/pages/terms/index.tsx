@@ -1,10 +1,10 @@
-import Page from '../../components/Page';
+import Layout from '../../components/Layout/Layout';
 
 function Terms() {
   return (
-    <Page title='Terms of Service'>
+    <Layout title='Terms of Service'>
       <p>Terms of Service</p>
-    </Page>
+    </Layout>
   );
 }
 

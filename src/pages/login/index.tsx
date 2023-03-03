@@ -12,7 +12,6 @@ import {
   Button,
   Checkbox
 } from '@mantine/core';
-import { useToggle } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import Link from 'next/link';
 
