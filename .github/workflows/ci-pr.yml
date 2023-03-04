@@ -1,11 +1,6 @@
-name: CI
+name: CI - PR
 
-on:
-  pull_request:
-  push:
-    branches:
-      - master
-      - develop
+on: pull_request
 
 jobs:
   ci:

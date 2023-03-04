@@ -67,15 +67,11 @@ describe('Authorization', () => {
 
 describe('Client Side Logic', () => {
   it('goes to registration page when clicking "Create account"', () => {
-    cy.visit('http://localhost:8000/login');
-
     cy.contains('Create account').click();
     cy.url().should('include', '/register');
   });
 
   it('handles invalid form input appropriately', () => {
-    cy.visit('http://localhost:8000/login');
-
     cy.get('input[name=email]').type('default@example');
     cy.get('button[name=login]').click();
     cy.contains('Invalid email').should('exist');
@@ -106,7 +102,6 @@ describe('Client Side Logic', () => {
   });
   
   it('toggle password visibility works', () => {
-    cy.visit('http://localhost:8000/login');
     cy.get('input[name=password]').type('default123');
     cy.get('input[name=password]').should('have.prop', 'type', 'password');
     cy.get('.mantine-PasswordInput-visibilityToggle').click();
