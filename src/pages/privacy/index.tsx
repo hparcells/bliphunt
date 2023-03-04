@@ -1,10 +1,10 @@
-import Page from '../../components/Page';
+import Layout from '../../components/Layout/Layout';
 
 function Privacy() {
   return (
-    <Page title='Privacy Policy'>
+    <Layout title='Privacy Policy'>
       <p>Privacy</p>
-    </Page>
+    </Layout>
   );
 }
 

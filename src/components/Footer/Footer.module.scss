@@ -1,0 +1,22 @@
+.root {
+  margin-top: 1em;
+  padding: 1.5em 0;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+}
+@media (max-width: 600px) {
+  .content {
+    flex-direction: column;
+    gap: 1em;
+  }
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,19 @@
+.root {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+.contentWrapper {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 0 0.5em;
+}
+
+.content {
+  display: block;
+}
