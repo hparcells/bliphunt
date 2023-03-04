@@ -6,15 +6,13 @@ import { isValidEmail } from '../../../../util/email';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data: {
-    usernameEmail: string;
+    email: string;
     password: string;
   } = req.body;
 
   let user;
-  if (isValidEmail(data.usernameEmail)) {
-    user = await tryLoginWithEmail(data.usernameEmail, data.password);
-  } else {
-    user = await tryLoginWithUsername(data.usernameEmail, data.password);
+  if (isValidEmail(data.email)) {
+    user = await tryLoginWithEmail(data.email, data.password);
   }
 
   if (!user) {

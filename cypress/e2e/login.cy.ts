@@ -21,7 +21,7 @@ describe('Authorization', () => {
     cy.get('button[name=login]').click();
     cy.wait('@login').then((intercept) => {      
       expect(intercept.request.body).to.contain({
-        usernameEmail: 'default@example.com',
+        email: 'default@example.com',
         password: 'default123'
       });
 
