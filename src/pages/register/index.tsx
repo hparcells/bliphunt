@@ -152,6 +152,7 @@ function Register() {
             {...form.getInputProps('username')}
             disabled={loading}
             name='username'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <TextInput
             label='Email address'
@@ -169,6 +170,7 @@ function Register() {
             {...form.getInputProps('password')}
             disabled={loading}
             name='password'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <PasswordInput
             label='Confirm password'
@@ -177,6 +179,7 @@ function Register() {
             {...form.getInputProps('confirmPassword')}
             disabled={loading}
             name='confirmPassword'
+            onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <Checkbox
             label={
