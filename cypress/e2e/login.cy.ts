@@ -1,3 +1,5 @@
+import { BAD_EMAILS } from "../../src/data/test";
+
 beforeEach(() => {
   cy.intercept('/api/v1/user/login').as('login');
   cy.visit('http://localhost:8000/login');
@@ -47,6 +49,22 @@ describe('Authorization', () => {
     cy.get('input[name=password]').type('123456789');
     cy.get('button[name=login]').click();
     cy.contains('Incorrect password').should('exist');
+  });
+
+  it.only('handles server side data validation appropriately', () => {
+    BAD_EMAILS.forEach((email) => {
+      cy.request({
+        method: 'POST',
+        url: '/api/v1/user/login',
+        body: {
+          email,
+          password: 'default123'
+        },
+        failOnStatusCode: false
+      }).then((response) => {
+        expect(response.status).to.eq(400);
+      });
+    });
   });
 
   it('redirects to feed if already logged in', () => {
