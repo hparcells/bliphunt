@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-
-import { tryLoginWithEmail, tryLoginWithUsername } from '../../../../database/functions/user';
+import { tryLoginWithEmail } from '../../../../database/functions/auth';
 
 import { isValidEmail } from '../../../../util/email';
 

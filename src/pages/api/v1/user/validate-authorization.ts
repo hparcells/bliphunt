@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { getUserByUsername, validateAuthorization } from '../../../../database/functions/user';
+import { getUserByUsername } from '../../../../database/functions/user';
+import { validateAuthorization } from '../../../../database/functions/auth';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data: { authorization: string } = req.body;

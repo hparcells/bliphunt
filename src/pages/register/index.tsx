@@ -14,6 +14,7 @@ import {
 import Link from 'next/link';
 import { useForm } from '@mantine/form';
 import { getHotkeyHandler } from '@mantine/hooks';
+import axios from 'axios';
 
 import Page from '../../components/Page';
 
@@ -39,6 +40,9 @@ function Register() {
       username: (value) => {
         if (!value) {
           return 'Username is required';
+        }
+        if (value.length > 32) {
+          return 'Username must be 32 characters or less';
         }
         return value.length >= 3 ? null : 'Username must be at least 3 characters long';
       },
@@ -81,16 +85,48 @@ function Register() {
     (document.activeElement as HTMLElement).blur();
 
     (async () => {
+      // If our values are good.
       if (form.isValid()) {
         setLoading(true);
 
-        // TODO:
+        // Try to register.
+        const response = await axios.post('/api/v1/user/register', {
+          username: form.values.username,
+          email: form.values.email,
+          password: form.values.password
+        });
+
+        // If the account already exists.
+        if (response.status === 409) {
+          // TODO: Do something.
+
+          setLoading(false);
+          return;
+        }
+
+        // If the account was't created for some other reason, like invalid email or password.
+        if (response.status !== 201) {
+          setLoading(false);
+
+          // TODO: Do something.
+          return;
+        }
+
+        // Login.
+        const user = await auth.login(form.values.email, form.values.password);
+        if (user) {
+          // Redirect to feed.
+          router.push('/feed');
+          return;
+        }
+        // TODO: Do something. We should probably reload the page.
+        console.log('Error logging in.');
       } else {
+        // Show errors.
         form.validate();
       }
+      setLoading(false);
     })();
-
-    setLoading(false);
   }
 
   return (
