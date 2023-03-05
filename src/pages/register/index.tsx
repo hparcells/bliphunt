@@ -85,47 +85,53 @@ function Register() {
     (document.activeElement as HTMLElement).blur();
 
     (async () => {
-      // If our values are good.
-      if (form.isValid()) {
-        setLoading(true);
+      setLoading(true);
 
-        // Try to register.
-        const response = await axios.post('/api/v1/user/register', {
+      if (!form.isValid()) {
+        // Show errors.
+        form.validate();
+        setLoading(false);
+        return;
+      }
+
+      // Try to register.
+      const response = await axios.post(
+        '/api/v1/user/register',
+        {
           username: form.values.username,
           email: form.values.email,
           password: form.values.password
-        });
+        },
+        {
+          validateStatus: (status) => {
+            return status < 500;
+          }
+        }
+      );
 
-        // If the account already exists.
+      // If account creation failed.
+      if (response.status !== 201) {
+        setLoading(false);
         if (response.status === 409) {
-          // TODO: Do something.
-
-          setLoading(false);
+          // If the account already exists.
+          form.setErrors({ username: 'Account already exists', email: 'Account already exists' });
           return;
         }
-
         // If the account was't created for some other reason, like invalid email or password.
-        if (response.status !== 201) {
-          setLoading(false);
-
-          // TODO: Do something.
-          return;
-        }
-
-        // Login.
-        const user = await auth.login(form.values.email, form.values.password);
-        if (user) {
-          // Redirect to feed.
-          router.push('/feed');
-          return;
-        }
-        // TODO: Do something. We should probably reload the page.
-        console.log('Error logging in.');
-      } else {
-        // Show errors.
-        form.validate();
+        form.setErrors({ terms: 'There was an error creating your account. Try again.' });
       }
-      setLoading(false);
+
+      // Login if account creation was successful.
+      const user = await auth.login(form.values.email, form.values.password);
+      if (user) {
+        // Redirect to feed.
+        router.push('/feed');
+        setLoading(false);
+        return;
+      }
+
+      // Else, refresh. Something stupid happened.
+      router.refresh();
     })();
   }
 
