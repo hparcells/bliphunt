@@ -67,3 +67,10 @@ export async function ensureDefaultUser(): Promise<boolean> {
   const success = await createUser('default123', 'default@example.com', 'default123');
   return success;
 }
+
+/**
+ * Deletes the default from the database.
+ */
+export async function deleteDefaultUser(): Promise<void> {
+  await User.findOneAndRemove({ username: 'default123' });
+}

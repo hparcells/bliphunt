@@ -1,3 +1,5 @@
+import { BAD_EMAILS } from '../../src/data/test';
+
 beforeEach(() => {
   cy.intercept('/api/v1/user/login').as('login');
   cy.intercept('/api/v1/user/register').as('register');
@@ -28,12 +30,14 @@ describe('Client Side Logic', () => {
   });
   
   it('accepts values in all fields', () => {
+    // Add values.
     cy.get('input[name=username]').type('a');
     cy.get('input[name=email]').type('a');
     cy.get('input[name=password]').type('a');
     cy.get('input[name=confirmPassword]').type('a');
     cy.get('input[name=terms]').check();
 
+    // Check values.
     cy.get('input[name=username]').should('have.value', 'a');
     cy.get('input[name=email]').should('have.value', 'a');
     cy.get('input[name=password]').should('have.value', 'a');
@@ -101,18 +105,22 @@ describe('Client Side Logic', () => {
   });
   
   it('submits when enter key is pressed', () => {
+    // Username
     cy.get('input[name=username]').type('a');
     cy.get('input[name=username]').type('{enter}');
     cy.contains('Username must be at least 3 characters long').should('exist');
 
+    // Email
     cy.get('input[name=email]').type('a');
     cy.get('input[name=email]').type('{enter}');
     cy.contains('Invalid email').should('exist');
 
+    // Password
     cy.get('input[name=password]').type('a');
     cy.get('input[name=password]').type('{enter}');
     cy.contains('Password must be at least 8 characters long').should('exist');
 
+    // Confirm Password
     cy.get('input[name=confirmPassword]').type('b');
     cy.get('input[name=confirmPassword]').type('{enter}');
     cy.contains('Passwords must match').should('exist');
@@ -121,6 +129,7 @@ describe('Client Side Logic', () => {
 
 describe('Registration', () => {
   it('redirects to feed if already logged in', () => {
+    // Login
     cy.visit('http://localhost:8000/login');
     cy.get('input[name=email]').type('default@example.com');
     cy.get('input[name=password]').type('default123');
@@ -128,29 +137,122 @@ describe('Registration', () => {
     cy.get('button[name=login]').click();
     cy.wait('@login');
 
+    // Go to Registration
     cy.visit('http://localhost:8000/register');
     cy.url().should('include', '/feed');
   });
 
   it('creates a new account', () => {
-    // TODO:
+    // Delete the default user.
+    cy.task('deleteDefaultUser');
+
+    // Register.
+    cy.get('input[name=username]').type('default123');
+    cy.get('input[name=email]').type('default@example.com');
+    cy.get('input[name=password]').type('default123');
+    cy.get('input[name=confirmPassword]').type('default123');
+    cy.get('input[name=terms]').check();
+    cy.get('button[name=register]').click();
+
+    cy.wait('@register').then((intercept) => {
+      expect(intercept.request.body).to.contain({
+        username: 'default123',
+        email: 'default@example.com',
+        password: 'default123'
+      });
+      expect(intercept.response?.statusCode).to.eq(201);
+    });
+
+    // Check if redirected to feed.
+    cy.url().should('include', '/feed');
   });
 
   it('does not create an account if email or username exists', () => {
+    // Existing username.
     cy.get('input[name=username]').type('default123');
     cy.get('input[name=email]').type('default@example.co');
     cy.get('input[name=password]').type('default123');
     cy.get('input[name=confirmPassword]').type('default123');
     cy.get('input[name=terms]').check();
     cy.get('button[name=register]').click();
-    
     cy.contains('Account already exists').should('exist');
+    cy.wait('@register').then((intercept) => {
+      expect(intercept.request.body).to.contain({
+        username: 'default123',
+        email: 'default@example.co',
+        password: 'default123'
+      });
+      expect(intercept.response?.statusCode).to.eq(409);
+    });
+    
+    // Existing username and email.
     cy.get('input[name=email]').type('m');
     cy.get('button[name=register]').click();
     cy.contains('Account already exists').should('exist');
-
-    cy.get('input[name=email]').type('{backspace}');
+    cy.wait('@register').then((intercept) => {
+      expect(intercept.request.body).to.contain({
+        username: 'default123',
+        email: 'default@example.com',
+        password: 'default123'
+      });
+      expect(intercept.response?.statusCode).to.eq(409);
+    });
+    
+    // Existing email.
+    cy.get('input[name=username]').type('{backspace}');
     cy.get('button[name=register]').click();
     cy.contains('Account already exists').should('exist');
+    cy.wait('@register').then((intercept) => {
+      expect(intercept.request.body).to.contain({
+        username: 'default12',
+        email: 'default@example.com',
+        password: 'default123'
+      });
+      expect(intercept.response?.statusCode).to.eq(409);
+    });
+  });
+
+  it('handles server side data validation appropriately', () => {
+    // Username
+    cy.request({
+      method: 'POST',
+      url: '/api/v1/user/register',
+      body: {
+        username: 'de',
+        email: 'default@example.com',
+        password: 'default123'
+      },
+      failOnStatusCode: false
+    }).then((response) => {
+      expect(response.status).to.eq(400);
+    });
+    cy.request({
+      method: 'POST',
+      url: '/api/v1/user/register',
+      body: {
+        username: 'aaUo59zp9Wg93jviIAtq0vZgqM1OnBKgC',
+        email: 'default@example.com',
+        password: 'default123'
+      },
+      failOnStatusCode: false
+    }).then((response) => {
+      expect(response.status).to.eq(400);
+    });
+
+    // Email
+    BAD_EMAILS.forEach((email) => {
+      cy.request({
+        method: 'POST',
+        url: '/api/v1/user/register',
+        body: {
+          username: 'default123',
+          email,
+          password: 'default123'
+        },
+        failOnStatusCode: false
+      }).then((response) => {
+        expect(response.status).to.eq(400);
+      });
+    });
   });
 });

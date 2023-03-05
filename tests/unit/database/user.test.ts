@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as dotenv from 'dotenv';
 
-import { getUserByUsername, ensureDefaultUser, getUserByEmail } from '../../../src/database/functions/user';
+import { getUserByUsername, ensureDefaultUser, getUserByEmail, deleteDefaultUser } from '../../../src/database/functions/user';
 
 dotenv.config();
 
@@ -85,5 +85,22 @@ describe('User Fetch', () => {
     const user = await getUserByEmail('notdefault@notexample.net');
 
     expect(user).toBeNull();
+  });
+});
+
+describe('User Deletion', () => {
+  it('deletes the default user', async () => {
+    // Make sure the user exists.
+    await ensureDefaultUser();
+    const user = await getUserByUsername('default123');
+    if(!user) {
+      throw new Error('User does not exist. Does the default user exist?');
+    }
+    expect(user).not.toBeNull();
+
+    // Delete the user.
+    await deleteDefaultUser();
+    const deletedUser = await getUserByUsername('default123');
+    expect(deletedUser).toBeNull();
   });
 });
