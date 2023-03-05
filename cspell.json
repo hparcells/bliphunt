@@ -1,6 +1,7 @@
 {
     "version": "0.2",
     "ignorePaths": [
+        ".github/",
         "tests/",
         ".eslintrc",
         ".prettierrc",
@@ -9,12 +10,14 @@
     ],
     "words": [
         "bliphunt",
+        "clsx",
         "hunterparcells",
         "Mantine",
         "nextjs",
         "pageview",
         "RYTJPJ",
         "stylis",
+        "Unfocus",
         "uuidv"
     ]
 }

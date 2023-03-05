@@ -1,11 +1,9 @@
-name: CI
+name: CI - PR
 
 on:
-  pull_request:
-  push:
+  pull_request_target:
     branches:
       - master
-      - develop
 
 jobs:
   ci:
@@ -19,8 +17,7 @@ jobs:
         run: npm install
       - name: Run Lint
         run: npm run lint
-      - name: Run Jest
-        run: npm run jest
+      - uses: ArtiomTr/jest-coverage-report-action@v2
       - name: Run Cypress
         uses: cypress-io/github-action@v5.1.0
         with:
