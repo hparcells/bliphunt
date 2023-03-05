@@ -18,13 +18,10 @@ describe('Authorization', () => {
     cy.get('input[name=email]').type('default@example.com');
     cy.get('input[name=password]').type('default123');
 
-    cy.get('input[name=email]').should('have.value', 'default@example.com');
-    cy.get('input[name=password]').should('have.value', 'default123');
-
     cy.get('button[name=login]').click();
-    cy.wait('@login').then((intercept) => {      
+    cy.wait('@login').then((intercept) => {
       expect(intercept.request.body).to.contain({
-        usernameEmail: 'default@example.com',
+        email: 'default@example.com',
         password: 'default123'
       });
 
@@ -71,6 +68,16 @@ describe('Client Side Logic', () => {
     cy.url().should('include', '/register');
   });
 
+  it('accepts values in all fields', () => {
+    cy.get('input[name=email]').type('a');
+    cy.get('input[name=password]').type('a');
+    cy.get('input[name=rememberMe]').check()
+
+    cy.get('input[name=email]').should('have.value', 'a');
+    cy.get('input[name=password]').should('have.value', 'a');
+    cy.get('input[name=rememberMe]').should('be.checked');
+  });
+
   it('handles invalid form input appropriately', () => {
     cy.get('input[name=email]').type('default@example');
     cy.get('button[name=login]').click();
@@ -80,6 +87,14 @@ describe('Client Side Logic', () => {
     cy.get('input[name=password]').type('12345');
     cy.get('button[name=login]').click();
     cy.contains('Incorrect password').should('exist');
+  });
+  
+  it('toggle password visibility works', () => {
+    cy.visit('http://localhost:8000/login');
+    cy.get('input[name=password]').type('default123');
+    cy.get('input[name=password]').should('have.prop', 'type', 'password');
+    cy.get('.mantine-PasswordInput-visibilityToggle').click();
+    cy.get('input[name=password]').should('have.prop', 'type', 'text');
   });
 
   it('submits when enter key is pressed', () => {
@@ -99,13 +114,6 @@ describe('Client Side Logic', () => {
     cy.get('input[name=password]').type('{enter}');
     cy.wait('@login');
     cy.url().should('include', '/feed');
-  });
-  
-  it('toggle password visibility works', () => {
-    cy.get('input[name=password]').type('default123');
-    cy.get('input[name=password]').should('have.prop', 'type', 'password');
-    cy.get('.mantine-PasswordInput-visibilityToggle').click();
-    cy.get('input[name=password]').should('have.prop', 'type', 'text');
   });
 });
 

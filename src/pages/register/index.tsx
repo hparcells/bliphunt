@@ -14,6 +14,7 @@ import {
 import Link from 'next/link';
 import { useForm } from '@mantine/form';
 import { getHotkeyHandler } from '@mantine/hooks';
+import axios from 'axios';
 
 import Page from '../../components/Page';
 
@@ -39,6 +40,9 @@ function Register() {
       username: (value) => {
         if (!value) {
           return 'Username is required';
+        }
+        if (value.length > 32) {
+          return 'Username must be 32 characters or less';
         }
         return value.length >= 3 ? null : 'Username must be at least 3 characters long';
       },
@@ -81,16 +85,54 @@ function Register() {
     (document.activeElement as HTMLElement).blur();
 
     (async () => {
-      if (form.isValid()) {
-        setLoading(true);
+      setLoading(true);
 
-        // TODO:
-      } else {
+      if (!form.isValid()) {
+        // Show errors.
         form.validate();
+        setLoading(false);
+        return;
       }
-    })();
 
-    setLoading(false);
+      // Try to register.
+      const response = await axios.post(
+        '/api/v1/user/register',
+        {
+          username: form.values.username,
+          email: form.values.email,
+          password: form.values.password
+        },
+        {
+          validateStatus: (status) => {
+            return status < 500;
+          }
+        }
+      );
+
+      // If account creation failed.
+      if (response.status !== 201) {
+        setLoading(false);
+        if (response.status === 409) {
+          // If the account already exists.
+          form.setErrors({ username: 'Account already exists', email: 'Account already exists' });
+          return;
+        }
+        // If the account was't created for some other reason, like invalid email or password.
+        form.setErrors({ terms: 'There was an error creating your account. Try again.' });
+      }
+
+      // Login if account creation was successful.
+      const user = await auth.login(form.values.email, form.values.password);
+      if (user) {
+        // Redirect to feed.
+        router.push('/feed');
+        setLoading(false);
+        return;
+      }
+
+      // Else, refresh. Something stupid happened.
+      router.refresh();
+    })();
   }
 
   return (
@@ -109,7 +151,7 @@ function Register() {
             required
             {...form.getInputProps('username')}
             disabled={loading}
-            name='email'
+            name='username'
             onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <TextInput
@@ -127,7 +169,7 @@ function Register() {
             mt='sm'
             {...form.getInputProps('password')}
             disabled={loading}
-            name='email'
+            name='password'
             onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <PasswordInput
@@ -136,7 +178,7 @@ function Register() {
             mt='sm'
             {...form.getInputProps('confirmPassword')}
             disabled={loading}
-            name='email'
+            name='confirmPassword'
             onKeyDown={getHotkeyHandler([['Enter', handleSubmit]])}
           />
           <Checkbox
@@ -154,11 +196,17 @@ function Register() {
             }
             mt='sm'
             {...form.getInputProps('terms')}
+            name='terms'
           />
           <Button fullWidth mt='xl' onClick={handleSubmit} loading={loading} name='register'>
             Register
           </Button>
         </Paper>
+        <Text mt='sm'>
+          <Anchor component={Link} href='/' color='dimmed'>
+            Back to home
+          </Anchor>
+        </Text>
       </Container>
     </Page>
   );

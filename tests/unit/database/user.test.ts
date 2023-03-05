@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as dotenv from 'dotenv';
 
-import { getUserByUsername, ensureDefaultUser, tryLoginWithUsername, getUserByEmail, tryLoginWithEmail } from '../../../src/database/functions/user';
+import { getUserByUsername, ensureDefaultUser, getUserByEmail, deleteDefaultUser } from '../../../src/database/functions/user';
 
 dotenv.config();
 
@@ -87,45 +87,20 @@ describe('User Fetch', () => {
     expect(user).toBeNull();
   });
 });
-describe('User Authentication with Username', () => {
-  it('logs in and returns the user with correct information', async () => {
-    await ensureDefaultUser();
-    const success = await tryLoginWithUsername('default123', 'default123');
-    
-    expect(success).not.toBeNull();
-    // TODO: Add more conditions.
-  });
-  it('returns null when logging in with a username that doesn\'t exist', async () => {
-    await ensureDefaultUser();
-    const success = await tryLoginWithUsername('default123456', 'default123456');
 
-    expect(success).toBe(null);
-  });
-  it('returns null when logging in with an incorrect password', async () => {
+describe('User Deletion', () => {
+  it('deletes the default user', async () => {
+    // Make sure the user exists.
     await ensureDefaultUser();
-    const success = await tryLoginWithUsername('default123', 'default123456');
+    const user = await getUserByUsername('default123');
+    if(!user) {
+      throw new Error('User does not exist. Does the default user exist?');
+    }
+    expect(user).not.toBeNull();
 
-    expect(success).toBe(null);
-  });
-});
-describe('User Authentication with Email', () => {
-  it('logs in and returns the user with correct information', async () => {
-    await ensureDefaultUser();
-    const success = await tryLoginWithEmail('default@example.com', 'default123');
-    
-    expect(success).not.toBeNull();
-    // TODO: Add more conditions.
-  });
-  it('returns null when logging in with an email that doesn\'t exist', async () => {
-    await ensureDefaultUser();
-    const success = await tryLoginWithEmail('notdefault@notexample.net', 'default123456');
-
-    expect(success).toBe(null);
-  });
-  it('returns null when logging in with an incorrect password', async () => {
-    await ensureDefaultUser();
-    const success = await tryLoginWithEmail('default@example.com', 'default123456');
-
-    expect(success).toBe(null);
+    // Delete the user.
+    await deleteDefaultUser();
+    const deletedUser = await getUserByUsername('default123');
+    expect(deletedUser).toBeNull();
   });
 });

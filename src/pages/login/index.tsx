@@ -133,6 +133,11 @@ function LoginPage() {
             Sign in
           </Button>
         </Paper>
+        <Text mt='sm'>
+          <Anchor component={Link} href='/' color='dimmed'>
+            Back to home
+          </Anchor>
+        </Text>
       </Container>
     </Page>
   );
