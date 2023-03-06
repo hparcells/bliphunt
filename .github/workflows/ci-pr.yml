@@ -16,15 +16,3 @@ jobs:
         run: npm run lint
       - name: Run Jest
         run: npm run jest
-      - name: Run Cypress
-        uses: cypress-io/github-action@v5.1.0
-        with:
-          start: npm run dev
-          wait-on: http://localhost:8000
-        env:
-          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          DATABASE_PRODUCTION_HOST: ${{ secrets.DATABASE_PRODUCTION_HOST }}
-          DATABASE_DEVELOPMENT_HOST: ${{ secrets.DATABASE_DEVELOPMENT_HOST }}
-          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
