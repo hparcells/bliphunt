@@ -51,7 +51,7 @@ describe('Authorization', () => {
     cy.contains('Incorrect password').should('exist');
   });
 
-  it.only('handles server side data validation appropriately', () => {
+  it('handles server side data validation appropriately', () => {
     BAD_EMAILS.forEach((email) => {
       cy.request({
         method: 'POST',
